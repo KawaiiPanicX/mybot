@@ -1,23 +1,11 @@
-import telebot
-import os
-import time
+from fastapi import FastAPI
 
-BOT_TOKEN = os.environ.get("BOT_TOKEN")   # Better to use environment variable
+app = FastAPI()
 
-bot = telebot.TeleBot(BOT_TOKEN)
+@app.get("/")
+def home():
+    return {"message": "API is working"}
 
-@bot.message_handler(func=lambda message: True)
-def get_chat_id(message):
-    try:
-        bot.send_message(message.chat.id, f"Chat ID: {message.chat.id}")
-        print(f"Sent to: {message.chat.id}")
-    except Exception as e:
-        print(f"Error: {e}")
-
-print("Bot started...")
-while True:
-    try:
-        bot.infinity_polling(none_stop=True, timeout=20)
-    except Exception as e:
-        print(f"Error: {e}")
-        time.sleep(10)
+@app.get("/users/{user_id}")
+def get_user(user_id: int):
+    return {"user_id": user_id}
